@@ -4,19 +4,19 @@ import HMS.EasyPrint;
 import HMS.UtilityFunctions;
 
 public class Hotel {
-    Vector<Object> customers;
-    Vector<Vector<Object>> rooms;
-    Vector<Object> reservations;
+    Vector<Customer> customers;
+    Vector<Vector<Room>> rooms;
+    Vector<Reservation> reservations;
 
     static EasyPrint ep = new EasyPrint();
 
     Hotel(int floors) {
-        customers = new Vector<Object>();
-        rooms = new Vector<Vector<Object>>();
-        reservations = new Vector<Object>();
+        customers = new Vector<Customer>();
+        rooms = new Vector<Vector<Room>>();
+        reservations = new Vector<Reservation>();
 
         for (int i = 0; i < floors; i++) {
-            rooms.add(new Vector<Object>());
+            rooms.add(new Vector<Room>());
         }
     }
 
@@ -39,6 +39,7 @@ public class Hotel {
         ep.print("5. Display all rooms");
         ep.print("6. Display all customers");
         ep.print("7. Exit");
+        ep.print("Enter your choice: ");
         Scanner sc = new Scanner(System.in);
         int choice = sc.nextInt();
         UtilityFunctions.cls();
@@ -53,21 +54,17 @@ public class Hotel {
                 break;
             case 3:
                 Reservation reservation = Reservation.createReservation(customers, rooms);
-                // checkInCustomer(reservation.customer);
+                if (reservation == null) {
+                    break;
+                }
+                checkInCustomer(reservation);
                 break;
             case 4:
-                Customer customerObj = null;
-                ep.print("Enter the customer id: ");
-                int id = sc.nextInt();
-
-                for (Object customer1 : customers) {
-                    Customer customer2 = (Customer) customer1;
-                    if (customer2.id == id) {
-                        customerObj = customer2;
-                        break;
-                    }
-                }
-                // checkOutCustomer(customerObj);
+                showReservations();
+                ep.print("Enter the reservation number: ");
+                int reservationNumber = sc.nextInt();
+                Reservation reservation1 = reservations.get(reservationNumber - 1);
+                checkOutCustomer(reservation1);
                 break;
 
             case 5:
@@ -76,11 +73,10 @@ public class Hotel {
 
             case 6:
                 showCustomers();
-                break;
-
-            default:
-                ep.print("Invalid choice!");
-                break;
+                break;  
+            case 7:
+                ep.print("Thank you for using the Hotel Management System!");
+                return;
         }
     }
 
@@ -93,11 +89,13 @@ public class Hotel {
         int floorNumber = room.floorNumber;
         if (floorNumber > rooms.size()) {
             ep.print("Floor number does not exist!");
+            UtilityFunctions.waitForEnter();
             return;
         }
-        Vector<Object> floor = rooms.get(floorNumber - 1);
+        Vector<Room> floor = rooms.get(floorNumber - 1);
         floor.add(room);
         ep.print("Room added successfully!");
+        UtilityFunctions.waitForEnter();
     }
 
     /**
@@ -107,15 +105,24 @@ public class Hotel {
     public void addCustomer() {
         Customer n = Customer.createCustomer();
         customers.add(n);
-        ep.print("Customer added successfully!");
 
-        // sort customer by debt
-        UtilityFunctions.sortVector(customers, (guest) -> {
+        // create a new vector and copy the elements of customers into it
+        Vector<Object> customerObjects = new Vector<Object>(customers);
+
+        // sort the new vector by debt
+        UtilityFunctions.sortVector(customerObjects, (guest) -> {
             Customer customer = (Customer) guest;
             return (float) customer.dues;
         }, true);
 
+        // copy the sorted elements back into the customers vector
+        customers.clear();
+        for (Object customer : customerObjects) {
+            customers.add((Customer) customer);
+        }
+
         ep.print("Customer added successfully!");
+        UtilityFunctions.waitForEnter();
     }
 
     /**
@@ -146,12 +153,38 @@ public class Hotel {
 
     public void showRooms() {
         ep.print("Rooms: ");
-        for (Vector<Object> floor : rooms) {
-            for (Object room : floor) {
-                Room room1 = (Room) room;
-                room1.print();
+        for (Vector<Room> floor : rooms) {
+            for (Room room : floor) {
+                room.print();
                 ep.print("-------------------------------\n");
             }
+        }
+        UtilityFunctions.waitForEnter();
+    }
+
+    public void checkInCustomer(Reservation reservation) {
+        reservations.add(reservation);
+        reservation.customer.setReservation(reservation);
+        reservation.room.setOccupied(true);
+        ep.print("Customer checked in successfully!");
+        UtilityFunctions.waitForEnter();
+    }
+
+    public void checkOutCustomer(Reservation reservation) {
+        reservations.remove(reservation);
+        reservation.customer.setReservation(null);
+        reservation.room.setOccupied(false);
+        ep.print("Customer checked out successfully!");
+        UtilityFunctions.waitForEnter();
+    }
+
+    public void showReservations() {
+        ep.print("Reservations: ");
+        for (Object reservation : reservations) {
+            ep.print("Reservation id: " + (reservations.indexOf(reservation) + 1));
+            Reservation reservation1 = (Reservation) reservation;
+            reservation1.print();
+            ep.print("-------------------------------\n");
         }
         UtilityFunctions.waitForEnter();
     }

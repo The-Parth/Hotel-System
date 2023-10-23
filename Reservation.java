@@ -1,4 +1,5 @@
 import java.util.*;
+import HMS.*;
 public class Reservation {
     Customer customer;
     Room room;
@@ -10,18 +11,22 @@ public class Reservation {
         this.price = price;
     }
 
-    public static Reservation createReservation(Vector<Object> custom, Vector<Vector<Object>> room) {
+    public static Reservation createReservation(Vector<Customer> custom, Vector<Vector<Room>> room) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the customer id: ");
         int id = sc.nextInt();
         System.out.println("Enter the room number: ");
         int roomNumber = sc.nextInt();
-        System.out.println("Enter the floor number: ");
-        int floorNumber = sc.nextInt();
-        System.out.println("Enter the price per day: ");
-        double price = sc.nextDouble();
         Customer customer = null;
-        Vector<Object> floor = room.get(floorNumber - 1);
+        Room customerRoom = null;
+        for (Vector<Room> floor1 : room) {
+            for (Room room1 : floor1) {
+                if (room1.roomNumber == roomNumber) {
+                    customerRoom = room1;
+                    break;
+                }
+            }
+        }
 
         for (Object customer1 : custom) {
             Customer customer2 = (Customer) customer1;
@@ -31,15 +36,46 @@ public class Reservation {
             }
         }
 
-        Room room1 = null;
-        for (Object room2 : floor) {
-            Room room3 = (Room) room2;
-            if (room3.roomNumber == roomNumber) {
-                room1 = room3;
-                break;
-            }
+        if (customer == null) {
+            System.out.println("Customer does not exist!");
+            UtilityFunctions.waitForEnter();
+            return null;
         }
 
-        return new Reservation(customer, room1, price);
+        if (customerRoom == null) {
+            System.out.println("Room does not exist!");
+            UtilityFunctions.waitForEnter();
+            return null;
+        }
+
+        if (customerRoom.isOccupied) {
+            System.out.println("Room is already occupied!");
+            UtilityFunctions.waitForEnter();
+            return null;
+        }
+
+
+        return new Reservation(customer, customerRoom, customerRoom.price);
     }
+
+    public void printMinimal() {
+        System.out.println("Room: ");
+        room.print();
+    }
+
+    public void print() {
+        EasyPrint ep = new EasyPrint();
+        System.out.println("Customer: ");
+        ep.print(customer.name);
+        ep.print(customer.id);
+        ep.print(customer.dues);
+        ep.print("--------------------");
+        System.out.println("Room: ");
+        ep.print(room.roomNumber);
+        ep.print(room.floorNumber);
+        ep.print(room.capacity);
+        ep.print(room.price);
+        ep.print();
+    }
+
 }

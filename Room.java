@@ -4,12 +4,14 @@ public class Room {
     int floorNumber;
     int capacity;
     int price;
+    boolean isOccupied;
 
     Room(int roomNumber, int floorNumber, int capacity, int price) {
         this.roomNumber = roomNumber;
         this.floorNumber = floorNumber;
         this.capacity = capacity;
         this.price = price;
+        this.isOccupied = false;
     }
 
     public static Room createRoom() {
@@ -30,5 +32,9 @@ public class Room {
         System.out.println("Floor number: " + floorNumber);
         System.out.println("Capacity: " + capacity);
         System.out.println("Price: " + price);
+    }
+
+    public void setOccupied(boolean isOccupied) {
+        this.isOccupied = isOccupied;
     }
 }
