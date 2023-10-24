@@ -4,20 +4,19 @@ public class Reservation {
     Customer customer;
     Room room;
     double price;
+    int totalDays;
 
     Reservation(Customer customer, Room room, double price) {
         this.customer = customer;
         this.room = room;
         this.price = price;
+        this.totalDays = 1;
     }
 
-    public static Reservation createReservation(Vector<Customer> custom, Vector<Vector<Room>> room) {
+    public static Reservation createReservation(Customer customer, Vector<Vector<Room>> room) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the customer id: ");
-        int id = sc.nextInt();
         System.out.println("Enter the room number: ");
         int roomNumber = sc.nextInt();
-        Customer customer = null;
         Room customerRoom = null;
         for (Vector<Room> floor1 : room) {
             for (Room room1 : floor1) {
@@ -25,14 +24,6 @@ public class Reservation {
                     customerRoom = room1;
                     break;
                 }
-            }
-        }
-
-        for (Object customer1 : custom) {
-            Customer customer2 = (Customer) customer1;
-            if (customer2.id == id) {
-                customer = customer2;
-                break;
             }
         }
 
@@ -76,6 +67,10 @@ public class Reservation {
         ep.print(room.capacity);
         ep.print(room.price);
         ep.print();
+    }
+
+    public void addTotalDay() {
+        totalDays++;
     }
 
 }

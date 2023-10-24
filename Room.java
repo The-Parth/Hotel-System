@@ -37,4 +37,8 @@ public class Room {
     public void setOccupied(boolean isOccupied) {
         this.isOccupied = isOccupied;
     }
+
+    public int getCost() {
+        return price;
+    }
 }

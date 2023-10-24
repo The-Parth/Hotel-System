@@ -1,9 +1,12 @@
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import HMS.EasyPrint;
 import HMS.UtilityFunctions;
 
-public class Hotel {
+
+public class Hotel implements HotelInterface {
     Vector<Customer> customers;
     Vector<Vector<Room>> rooms;
     Vector<Reservation> reservations;
@@ -38,7 +41,8 @@ public class Hotel {
         ep.print("4. Check-out a customer");
         ep.print("5. Display all rooms");
         ep.print("6. Display all customers");
-        ep.print("7. Exit");
+        ep.print("7. Advance a day");
+        ep.print("8. Exit");
         ep.print("Enter your choice: ");
         Scanner sc = new Scanner(System.in);
         int choice = sc.nextInt();
@@ -53,6 +57,7 @@ public class Hotel {
                 addCustomer();
                 break;
             case 3:
+                Customer customers = searchCustomer();
                 Reservation reservation = Reservation.createReservation(customers, rooms);
                 if (reservation == null) {
                     break;
@@ -75,8 +80,11 @@ public class Hotel {
                 showCustomers();
                 break;  
             case 7:
-                ep.print("Thank you for using the Hotel Management System!");
-                return;
+                advanceDay();
+                break;
+            case 8:
+                System.exit(0);
+                break;
         }
     }
 
@@ -162,14 +170,21 @@ public class Hotel {
         UtilityFunctions.waitForEnter();
     }
 
+    /*
+     * Check in a customer
+     */
     public void checkInCustomer(Reservation reservation) {
         reservations.add(reservation);
         reservation.customer.setReservation(reservation);
         reservation.room.setOccupied(true);
+        reservation.customer.addDues((int) (reservation.room.getCost()*1.3)); // 30% of the cost per day is registration fee
         ep.print("Customer checked in successfully!");
         UtilityFunctions.waitForEnter();
     }
 
+    /*
+     * Check out a customer
+     */
     public void checkOutCustomer(Reservation reservation) {
         reservations.remove(reservation);
         reservation.customer.setReservation(null);
@@ -178,6 +193,9 @@ public class Hotel {
         UtilityFunctions.waitForEnter();
     }
 
+    /*
+     * Show all reservations
+     */
     public void showReservations() {
         ep.print("Reservations: ");
         for (Object reservation : reservations) {
@@ -189,4 +207,54 @@ public class Hotel {
         UtilityFunctions.waitForEnter();
     }
 
+    public void advanceDay() {
+        for (Object reservation : reservations) {
+            Reservation reservation1 = (Reservation) reservation;
+            reservation1.addTotalDay();
+            reservation1.customer.addDues(reservation1.room.getCost());
+        }
+    }
+
+    public Customer searchCustomer() {
+        Scanner sc = new Scanner(System.in);
+        ep.print("Enter the customer name: ");
+        String namae = sc.nextLine();
+        Vector<Customer> searched = new Vector<Customer>();
+        Pattern p = Pattern.compile(namae, Pattern.CASE_INSENSITIVE);
+        for (Object customer : customers) {
+            Customer customer1 = (Customer) customer;
+            Matcher m = p.matcher(customer1.name);
+            if (m.find()) {
+                searched.add(customer1);
+            }
+        }
+
+        if (searched.size() == 0) {
+            ep.print("No customers found!");
+            UtilityFunctions.waitForEnter();
+            return null;
+        }
+
+        ep.print("Customers found: ");
+        for (Object customer : searched) {
+            Customer customer1 = (Customer) customer;
+            customer1.print();
+            ep.print("-------------------------------\n");
+        }
+
+        ep.print("Enter the customer id: ");
+        int id = sc.nextInt();
+        for (Object customer : searched) {
+            Customer customer1 = (Customer) customer;
+            if (customer1.id == id) {
+                ep.print("Customer selected!");
+                return customer1;
+            }
+        }
+
+        ep.print("Customer not found!");
+        UtilityFunctions.waitForEnter();
+        return null;
+
+    }
 }

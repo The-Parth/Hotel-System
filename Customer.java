@@ -36,4 +36,8 @@ public class Customer {
         }
 
     }
+
+    public void addDues(int dues) {
+        this.dues += dues;
+    }
 }
