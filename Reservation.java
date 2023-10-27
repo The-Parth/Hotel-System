@@ -60,7 +60,7 @@ public class Reservation {
         ep.print(customer.name);
         ep.print(customer.id);
         ep.print(customer.dues);
-        ep.print("--------------------");
+        ep.horizontalLine();
         System.out.println("Room: ");
         ep.print(room.roomNumber);
         ep.print(room.floorNumber);

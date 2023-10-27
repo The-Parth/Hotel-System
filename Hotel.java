@@ -150,7 +150,7 @@ public class Hotel implements HotelInterface {
         for (Object customer : customers) {
             Customer customer1 = (Customer) customer;
             customer1.print();
-            ep.print("-------------------------------\n");
+            ep.horizontalLine();
         }
         UtilityFunctions.waitForEnter();
     }
@@ -164,7 +164,7 @@ public class Hotel implements HotelInterface {
         for (Vector<Room> floor : rooms) {
             for (Room room : floor) {
                 room.print();
-                ep.print("-------------------------------\n");
+                ep.horizontalLine();
             }
         }
         UtilityFunctions.waitForEnter();
@@ -202,7 +202,7 @@ public class Hotel implements HotelInterface {
             ep.print("Reservation id: " + (reservations.indexOf(reservation) + 1));
             Reservation reservation1 = (Reservation) reservation;
             reservation1.print();
-            ep.print("-------------------------------\n");
+            ep.horizontalLine();
         }
         UtilityFunctions.waitForEnter();
     }
@@ -239,7 +239,7 @@ public class Hotel implements HotelInterface {
         for (Object customer : searched) {
             Customer customer1 = (Customer) customer;
             customer1.print();
-            ep.print("-------------------------------\n");
+            ep.horizontalLine();
         }
 
         ep.print("Enter the customer id: ");

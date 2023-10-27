@@ -40,4 +40,8 @@ public class EasyPrint {
     public void printl(String str) {
         System.out.print(str);
     }
+
+    public void horizontalLine() {
+        System.out.println("--------------------------------------------------");
+    }
 }
