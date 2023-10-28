@@ -1,4 +1,6 @@
 import java.util.*;
+
+import HMS.Inputs;
 public class Customer {
     String name;
     int dues;
@@ -14,10 +16,8 @@ public class Customer {
 
     public static Customer createCustomer() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the name of the customer:");
-        String name = sc.nextLine();
-        System.out.println("Enter the dues of the customer, if any:");
-        int dues = sc.nextInt();
+        String name = Inputs.getString("Enter the name of the customer: ");
+        int dues = Inputs.getInt("Enter the dues of the customer, if any: ");
         Customer customer = new Customer(name, dues);
         return customer;
     }

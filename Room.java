@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import HMS.Inputs;
 public class Room {
     int roomNumber;
     int floorNumber;
@@ -16,14 +17,10 @@ public class Room {
 
     public static Room createRoom() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter floor number: ");
-        int floorNumber = sc.nextInt();
-        System.out.println("Enter capacity: ");
-        int capacity = sc.nextInt();
-        System.out.println("Enter price: ");
-        int price = sc.nextInt();
-        System.out.println("Enter room number: ");
-        int roomNumber = sc.nextInt();
+        int floorNumber = Inputs.getInt("Enter floor number: ");
+        int capacity = Inputs.getInt("Enter capacity: ");
+        int price = Inputs.getInt("Enter price: ");
+        int roomNumber = Inputs.getInt("Enter room number: ");
         return new Room(roomNumber, floorNumber, capacity, price);
     }
 

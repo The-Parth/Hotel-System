@@ -15,8 +15,7 @@ public class Reservation {
 
     public static Reservation createReservation(Customer customer, Vector<Vector<Room>> room) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the room number: ");
-        int roomNumber = sc.nextInt();
+        int roomNumber = Inputs.getInt("Enter the room number: ");
         Room customerRoom = null;
         for (Vector<Room> floor1 : room) {
             for (Room room1 : floor1) {
